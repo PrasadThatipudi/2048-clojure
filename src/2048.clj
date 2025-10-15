@@ -25,12 +25,21 @@
 (defn add-pairs [pairs]
   (map add-vector  pairs))
 
-(defn fill-right [vector replacement length]
-  (concat vector (repeat (- length (count vector)) replacement)))
+(defn fill-zero-right [length vector]
+  (concat vector (repeat (- length (count vector)) 0)))
 
-(defn move-line-left [numbers]
-  (fill-right (add-pairs (consecutive-pairs (remove-zeros numbers))) 0
-              (count numbers)))
+(defn fill-zero-left [length vector]
+  (concat (repeat (- length (count vector)) 0) vector))
 
-(defn move-left [table-numbers]
-  (map move-line-left table-numbers))
+(defn move-line-left [line]
+  (add-pairs (consecutive-pairs (remove-zeros line))))
+
+(defn move-left [lines]
+  (map
+   (fn [line] (fill-zero-right (count (first lines)) line))
+   (map move-line-left lines)))
+
+(defn move-right [lines]
+  (map
+   (fn [line] (fill-zero-left (count (first lines)) line))
+   (map move-line-left lines)))

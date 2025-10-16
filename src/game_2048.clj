@@ -1,10 +1,12 @@
-(defn not-zero? [number]
+(ns game-2048)
+
+(defn- not-zero? [number]
   (not (zero? number)))
 
-(defn remove-zeros [numbers]
+(defn- remove-zeros [numbers]
   (filter not-zero?  numbers))
 
-(defn make-consecutive-pair [pairs current-value]
+(defn- make-consecutive-pair [pairs current-value]
   (let [last-pair (last pairs)]
     (cond (and
            (= (count last-pair) 1)
@@ -17,18 +19,18 @@
                        (count pairs)
                        (conj [current-value])))))
 
-(defn consecutive-pairs [numbers]
+(defn- consecutive-pairs [numbers]
   (reduce make-consecutive-pair [] numbers))
 
-(defn add-vector [vector] (apply + vector))
+(defn- add-vector [vector] (apply + vector))
 
-(defn add-pairs [pairs]
+(defn- add-pairs [pairs]
   (map add-vector  pairs))
 
-(defn fill-zero-right [length vector]
+(defn- fill-zero-right [length vector]
   (concat vector (repeat (- length (count vector)) 0)))
 
-(defn move-line-left [line]
+(defn- move-line-left [line]
   (fill-zero-right (count line)
                    (add-pairs (consecutive-pairs (remove-zeros line)))))
 
@@ -38,7 +40,7 @@
 (defn move-right [lines]
   (map reverse (move-left (map reverse lines))))
 
-(defn transpose [matrix]
+(defn- transpose [matrix]
   (loop [transposedMatrix [] index 0]
     (cond (= (count (first matrix)) index) transposedMatrix
           :else (recur

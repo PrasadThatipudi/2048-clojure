@@ -28,18 +28,12 @@
 (defn fill-zero-right [length vector]
   (concat vector (repeat (- length (count vector)) 0)))
 
-(defn fill-zero-left [length vector]
-  (concat (repeat (- length (count vector)) 0) vector))
-
 (defn move-line-left [line]
-  (add-pairs (consecutive-pairs (remove-zeros line))))
+  (fill-zero-right (count line)
+                   (add-pairs (consecutive-pairs (remove-zeros line)))))
 
 (defn move-left [lines]
-  (map
-   (fn [line] (fill-zero-right (count (first lines)) line))
-   (map move-line-left lines)))
+  (map move-line-left lines))
 
 (defn move-right [lines]
-  (map
-   (fn [line] (fill-zero-left (count (first lines)) line))
-   (map move-line-left lines)))
+  (map reverse (move-left (map reverse lines))))

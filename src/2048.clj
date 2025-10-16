@@ -43,6 +43,11 @@
     (cond (= (count (first matrix)) index) transposedMatrix
           :else (recur
                  (concat transposedMatrix
-                         [(map (fn [row] (get row index)) matrix)])
+                         [(map (fn [row] (nth row index)) matrix)])
                  (inc index)))))
 
+(defn move-up [lines]
+  (transpose (move-left (transpose lines))))
+
+(defn move-down [lines]
+  (transpose (move-right (transpose lines))))

@@ -37,3 +37,12 @@
 
 (defn move-right [lines]
   (map reverse (move-left (map reverse lines))))
+
+(defn transpose [matrix]
+  (loop [transposedMatrix [] index 0]
+    (cond (= (count (first matrix)) index) transposedMatrix
+          :else (recur
+                 (concat transposedMatrix
+                         [(map (fn [row] (get row index)) matrix)])
+                 (inc index)))))
+

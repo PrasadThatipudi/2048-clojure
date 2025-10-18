@@ -8,9 +8,6 @@
 (defn random-in-range [start end]
   (+ start (rand-int (- end start))))
 
-(defn- align-left [text length]
-  (str text (apply str (repeat (- length (count text)) " "))))
-
 (defn- line [column-length support]
   (str/join (repeat column-length support)))
 

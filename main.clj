@@ -12,7 +12,7 @@
 
 (defn read-player-move [board]
   (utils/clear-screen)
-  (utils/table board)
+  (utils/print-board board)
   (println "\n  w")
   (println "a s d\n")
   [board (utils/prompt "Enter your move: ")])

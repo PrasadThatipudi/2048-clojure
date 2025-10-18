@@ -1,4 +1,5 @@
 (ns utils)
+(require '[clojure.string :as str])
 
 (defn clear-screen []
   (print "\033[2J\033[3J\033[H")
@@ -10,9 +11,45 @@
 (defn- align-left [text length]
   (str text (apply str (repeat (- length (count text)) " "))))
 
-(defn table [matrix]
-  (doseq [row matrix]
-    (apply println (map (fn [element] (align-left (str element) 4)) row))))
+(defn- line [column-length support]
+  (str/join (repeat column-length support)))
+
+(defn- enclose [wrapper str]
+  (str/join (concat wrapper str wrapper)))
+
+(defn- boarder [column-length column-count corner support mid]
+  (enclose corner
+           (str/join mid (repeat column-count (line column-length support)))))
+
+(defn- empty-boarder [column-length column-count]
+  (boarder column-length column-count "|" " " "|"))
+
+(defn- line-boarder [column-length column-count]
+  (boarder column-length column-count "+" "-" "+"))
+
+(defn- align-centre [string column-length]
+  (let [text (str string) space-count (- column-length (count text))]
+    (str/join (concat
+               (line (/ space-count 2) " ") text
+               (line (Math/round (float (/ space-count 2))) " ")))))
+
+(defn- make-row [row column-length]
+  (enclose "|"
+           (str/join "|"
+                     (map (fn [element] (align-centre element column-length)) row))))
+
+(defn- make-board [board col-length]
+  (let [col-count (count (first board))
+        boarder (line-boarder col-length col-count)]
+    (cons boarder (flatten
+                   (map (fn [row]
+                          [(empty-boarder col-length col-count)
+                           (make-row row col-length)
+                           (empty-boarder col-length col-count) boarder])
+                        board)))))
+
+(defn print-board [board]
+  (println (str/join "\n" (make-board board 6))))
 
 (defn prompt [message]
   (print message)

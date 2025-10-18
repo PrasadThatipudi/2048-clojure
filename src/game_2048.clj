@@ -1,7 +1,5 @@
 (ns game-2048)
-
-(defn- not-zero? [number]
-  (not (zero? number)))
+(require '[utils :refer [not-zero?]])
 
 (defn- remove-zeros [numbers]
   (filter not-zero?  numbers))

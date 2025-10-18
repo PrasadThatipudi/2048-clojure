@@ -19,12 +19,15 @@
   (flush)
   (read-line))
 
+(defn deep-vec [x]
+  (cond (not (seq? x)) x
+        :else (vec (map deep-vec x))))
 
 (defn not-zero? [number]
   (not (zero? number)))
 
-(defn is-game-over [board]
-  (some not-zero? (flatten board)))
+(defn game-over? [board]
+  (every? not-zero? (flatten board)))
 
 (defn put-number-in-board [board [row column] replacement]
   (assoc board row (assoc (nth board row) column replacement)))
@@ -39,6 +42,8 @@
 (defn list-empty-boxes [board]
   (loop [row-index 0 empty-boxes []]
     (cond (= (count board) row-index) empty-boxes
-          :else (recur (inc row-index)
-                       (map (fn [pos] [row-index pos])
-                            (find-all-positions (nth board row-index) 0))))))
+          :else (recur
+                 (inc row-index)
+                 (concat empty-boxes
+                         (map (fn [pos] [row-index pos])
+                              (find-all-positions (nth board row-index) 0)))))))

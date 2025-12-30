@@ -1,6 +1,9 @@
 (ns main
   "Main entry point for the 2048 game application."
-  (:require [game-2048 :as game] [utils]))
+  (:require [game-2048 :as game]
+            [utils]
+            [org.httpkit.server :as server]
+            [hiccup.core :refer [html]]))
 
 (defn select-random-empty-position [board]
   (let [empty-positions (utils/list-empty-boxes board)]
@@ -24,13 +27,32 @@
     "s" (game/move-down board)
     "d" (game/move-right board)))
 
+
+(defn make-column [element]
+  [:td {:style {:width 100 :height 100 :text-align "center"}} element])
+
+(defn make-row [row]
+  [:tr (map make-column row)])
+
+(defn make-board [board]
+  [:table {:border 1}
+   (map make-row board)])
+
+(defn make-move []
+  (println "clicked!"))
+
+(defn render-board [board]
+  (html
+   [:html
+    [:body (make-board board)]]))
+
 (def initial-board [[0 0 0 0] [0 0 0 0] [0 0 0 0] [0 0 0 0]])
 
-(defn -main []
-  (loop [board initial-board]
-    (cond (utils/game-over? board) (println "Game Over!")
-          :else (recur
-                 (apply execute-player-move
-                        (read-player-move (update-board-with board 2)))))))
+(defn render-game [_req]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body (render-board initial-board)})
 
-(-main)
+(defn -main []
+  (server/run-server render-game {:port 8000})
+  (println "Server running at http://localhost:8000"))

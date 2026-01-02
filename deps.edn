@@ -1,4 +1,8 @@
-{:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}
-        http-kit/http-kit   {:mvn/version "2.7.0"}
-        hiccup/hiccup {:mvn/version "2.0.0-RC1"}}}
+{:paths ["src" "src-frontend"]
+ :deps {org.clojure/clojure      {:mvn/version "1.11.1"}
+        org.clojure/clojurescript {:mvn/version "1.11.132"}
+        http-kit/http-kit        {:mvn/version "2.7.0"}
+        hiccup/hiccup            {:mvn/version "2.0.0-RC1"}
+        ring/ring-core           {:mvn/version "1.11.0"}
+        reagent/reagent          {:mvn/version "1.2.0"}
+        thheller/shadow-cljs     {:mvn/version "2.28.14"}}}

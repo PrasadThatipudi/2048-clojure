@@ -3,6 +3,7 @@
   (:require [game-2048 :as game]
             [utils]
             [org.httpkit.server :as server]
+            [ring.middleware.file :refer [wrap-file]]
             [hiccup.core :refer [html]]))
 
 (defn select-random-empty-position [board]
@@ -27,32 +28,34 @@
     "s" (game/move-down board)
     "d" (game/move-right board)))
 
-
-(defn make-column [element]
-  [:td {:style {:width 100 :height 100 :text-align "center"}} element])
-
-(defn make-row [row]
-  [:tr (map make-column row)])
-
-(defn make-board [board]
-  [:table {:border 1}
-   (map make-row board)])
-
-(defn make-move []
-  (println "clicked!"))
-
-(defn render-board [board]
-  (html
-   [:html
-    [:body (make-board board)]]))
-
 (def initial-board [[0 0 0 0] [0 0 0 0] [0 0 0 0] [0 0 0 0]])
 
-(defn render-game [_req]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (render-board initial-board)})
+
+(defn index-page []
+  (html
+   [:html
+    [:head
+     [:meta {:charset "utf-8"}]
+     [:title "App"]]
+    [:body
+     [:div {:id "app"}]
+     [:script {:src "/js/main.js"}]]]))
+
+(defn handler [req]
+  (let [uri (:uri req)
+        method (:request-method req)]
+    (case [method uri]
+      [:get "/"] {:status 200
+                    :headers {"Content-Type" "text/html; charset=utf-8"}
+                    :body (index-page)}
+      {:status 404
+       :headers {"Content-Type" "text/plain; charset=utf-8"}
+       :body "Not found"})))
+
+(def app
+  (-> handler
+      (wrap-file "public")))
 
 (defn -main []
-  (server/run-server render-game {:port 8000})
+  (server/run-server app {:port 8000})
   (println "Server running at http://localhost:8000"))

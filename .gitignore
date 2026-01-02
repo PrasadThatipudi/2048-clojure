@@ -1,4 +1,21 @@
-.clj-kondo
-.lsp
-.vscode
+.clj-kondo/
+.lsp/
+.vscode/
+.clj-cache
+
+# Clojure / build artifacts
 .cpcache/
+target/
+classes/
+
+# Node / shadow-cljs
+node_modules/
+.shadow-cljs/
+
+# Generated JS & assets
+public/js/
+public/css/
+public/.cache/
+
+# macOS
+.DS_Store
